@@ -1,32 +1,23 @@
 <template>
   <div class="page" data-name="home">
     <!-- Top Navbar -->
-    <div class="navbar navbar-large">
-      <div class="navbar-bg"></div>
+    <div class="navbar no-shadow no-hairline">
+      <div class="navbar-bg navbar-bg-transparent"></div>
       <div class="navbar-inner">
         <div class="left">
-          <a href="#" class="link icon-only panel-open" data-panel="left">
-            <i class="icon f7-icons if-not-md">menu</i>
-            <i class="icon material-icons if-md">menu</i>
-          </a>
+          <div class="title">RPS Royale</div>
         </div>
-        <div class="title sliding">RPS Royale</div>
-        <div class="right">
-          <a href="#" class="link icon-only panel-open" data-panel="right">
-            <i class="icon f7-icons if-not-md">menu</i>
-            <i class="icon material-icons if-md">menu</i>
-          </a>
+        <div class="right button-group">
+          <button class="button button-outline button-circle">
+            <i class="icon material-icons">house</i>
+          </button>
+          <button class="button button-outline button-circle">
+            <i class="icon material-icons">settings</i>
+          </button>
+          <button class="button button-outline button-circle">
+            <i class="icon material-icons">music_note</i>
+          </button>
         </div>
-        <div class="title-large">
-          <div class="title-large-text">RPS Royale</div>
-        </div>
-      </div>
-    </div>
-    <!-- Toolbar-->
-    <div class="toolbar toolbar-bottom">
-      <div class="toolbar-inner">
-        <a href="#" class="link">Left Link</a>
-        <a href="#" class="link">Right Link</a>
       </div>
     </div>
     <!-- Scrollable page content-->
@@ -39,6 +30,7 @@
 import QR from "@/components/qr-container.f7"
 export default (props, { $, $on }) => {
   $on('pageInit', () => {
+
   })
   return $render;
 }

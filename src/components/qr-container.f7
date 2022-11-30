@@ -13,10 +13,8 @@ import QRCode from "qrcode"
 export default (props, { $, $onMounted, $el }) => {
     $onMounted(() => {
         QRCode.toCanvas('text', { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
-        if (err) throw err
-        
+            if (err) throw err
             var container = $el.value
-            console.log("🚀 ~ file: qr-container.f7 ~ line 19 ~ container", container)
             container.append(canvas)
         })
     })

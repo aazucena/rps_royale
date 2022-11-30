@@ -8,7 +8,32 @@
   --f7-theme-color: #6d3fff;
   --f7-theme-color-rgb: 109, 63, 255;
   --f7-theme-color-shade: #4e16ff;
+  --f7-theme-color-shade-rgb: 78, 22, 255;
   --f7-theme-color-tint: #8c68ff;
+  --f7-theme-color-tint-rgb: 140, 104, 255;
 }
 
 /* Your app custom styles here */
+
+
+.navbar-bg.navbar-bg-transparent {
+  background-color: transparent !important;
+}
+
+
+.button-group {
+  display: flex !important;
+  justify-content: space-evenly !important;
+  gap: .75rem !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.button {
+  &.button-circle {
+    border-radius: 50% !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+    background-color: rgba(var(--f7-theme-color-tint-rgb), 0.25) !important;
+  }
+}
