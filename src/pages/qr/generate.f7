@@ -1,0 +1,50 @@
+<template>
+    <div class="page" data-name="qr_generate">
+        <!-- Top Navbar -->
+        <div class="navbar no-shadow no-hairline">
+            <div class="navbar-bg navbar-bg-transparent"></div>
+            <div class="navbar-inner">
+                <div class="right button-group">
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">question_mark</i>
+                    </button>
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">settings</i>
+                    </button>
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">music_note</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Scrollable page content-->
+        <div class="page-content">
+            <div class="display-container">
+                <${QR} />
+            </div>
+            <div class="display-flex flex-direction-column w-100 justify-content-center gaps-3">
+                <div class="display-flex flex-direction-row w-100 justify-content-center">
+                    <a href="#" class="button button-fill w-75">Scan</a>
+                </div>
+                <div class="display-flex flex-direction-row w-100 justify-content-center">
+                    <a href="#" class="button button-fill w-75">Show</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    .display-container {
+        padding-bottom: 2rem;
+        padding-top: 2rem;
+    }
+</style>
+<script>
+    import QR from "@/components/qr-container.f7"
+    export default (props, { $, $on }) => {
+        $on('pageInit', () => {
+
+        })
+        return $render;
+    }
+</script>

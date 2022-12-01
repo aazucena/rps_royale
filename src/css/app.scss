@@ -11,6 +11,7 @@
   --f7-theme-color-shade-rgb: 78, 22, 255;
   --f7-theme-color-tint: #8c68ff;
   --f7-theme-color-tint-rgb: 140, 104, 255;
+  --f7-font-family: 'Nunito Sans', sans-serif;
 }
 
 /* Your app custom styles here */
@@ -19,7 +20,29 @@
 .navbar-bg.navbar-bg-transparent {
   background-color: transparent !important;
 }
+.navbar-bg.navbar-bg-white {
+  background-color: white !important;
+}
 
+.color-secondary {
+  --f7-theme-color: #fff53f ;
+  --f7-theme-color-rgb: 255, 245, 63;
+  --f7-theme-color-shade: #fff314;
+  --f7-theme-color-shade-rgb: 255, 243, 20;
+  --f7-theme-color-tint: #fff766;
+  --f7-theme-color-tint-rgb: 255, 247, 102;
+  --f7-button-text-color: black;
+}
+
+.color-tertiary {
+  --f7-theme-color: #3fff56 ;
+  --f7-theme-color-rgb: 63, 255, 86;
+  --f7-theme-color-shade: #14ff31;
+  --f7-theme-color-shade-rgb: 20, 255, 49;
+  --f7-theme-color-tint: #66ff78;
+  --f7-theme-color-tint-rgb: 102, 255, 120;
+  --f7-button-text-color: black;
+}
 
 .button-group {
   display: flex !important;
@@ -28,6 +51,10 @@
   padding-left: 1rem;
   padding-right: 1rem;
 }
+.navbar-inner {
+  padding-top: 0.25rem;
+  padding-top: 0.25rem;
+}
 
 .button {
   &.button-circle {
@@ -35,5 +62,114 @@
     padding-top: 1.25rem !important;
     padding-bottom: 1.25rem !important;
     background-color: rgba(var(--f7-theme-color-tint-rgb), 0.25) !important;
+  }
+}
+
+.title {
+  color: var(--f7-theme-color) !important;
+  font-weight: bold !important;
+  font-size: 2.5rem !important;
+}
+
+@for $i from 1 through 100 {
+  .w-#{$i} {
+    width: $i * 1% !important;
+  }
+  .h-#{$i} {
+    height: $i * 1% !important;
+  }
+  .gaps-#{$i} {
+    gap: $i * 0.25rem !important;
+  }
+  .fsize-#{$i} {
+    font-size: $i * 0.25rem !important;
+  }
+  .p-#{$i} {
+    padding: $i * 0.25rem !important;
+  }
+  .px-#{$i} {
+    padding-left: $i * 0.25rem !important;
+    padding-right: $i * 0.25rem !important;
+  }
+  .py-#{$i} {
+    padding-top: $i * 0.25rem !important;
+    padding-bottom: $i * 0.25rem !important;
+  }
+  .pt-#{$i} {
+    padding-top: $i * 0.25rem !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i * 0.25rem !important;
+  }
+  .ps-#{$i} {
+    padding-left: $i * 0.25rem !important;
+  }
+  .pe-#{$i} {
+    padding-right: $i * 0.25rem !important;
+  }
+  .m-#{$i} {
+    margin: $i * 0.25rem !important;
+  }
+  .mx-#{$i} {
+    margin-left: $i * 0.25rem !important;
+    margin-right: $i * 0.25rem !important;
+  }
+  .my-#{$i} {
+    margin-top: $i * 0.25rem !important;
+    margin-bottom: $i * 0.25rem !important;
+  }
+  .mt-#{$i} {
+    margin-top: $i * 0.25rem !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i * 0.25rem !important;
+  }
+  .ms-#{$i} {
+    margin-left: $i * 0.25rem !important;
+  }
+  .me-#{$i} {
+    margin-right: $i * 0.25rem !important;
+  }
+}
+
+.main-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1.75rem !important;
+  margin-bottom: 1.25rem !important;
+  gap: 1.5rem !important;
+  .main-menu-item {
+    padding: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    width: 75% !important;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius:0.5rem;
+    height: auto !important;
+    box-sizing: content-box !important;
+    text-transform: none !important;
+    .main-menu-item-img {
+      display: flex;
+      justify-content: center;
+      .icon {
+        font-size: 5rem !important;
+      }
+    }
+    .main-menu-item-title {
+      display: flex;
+      justify-content: center;
+      font-size: 1.5rem !important;
+      margin-left: 1rem;
+      margin-right: 1rem;
+      font-weight: 700;
+    }
+    &:nth-child(2n) {
+      flex-direction: row-reverse !important;
+    }
   }
 }

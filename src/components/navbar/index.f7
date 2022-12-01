@@ -1,0 +1,29 @@
+<template>
+    <div class="navbar no-shadow no-hairline">
+        <div class="navbar-bg navbar-bg-white"></div>
+        <div class="navbar-inner">
+            <div class="right button-group">
+                <button class="button button-outline button-circle" @click=${onMuteClick}>
+                    <i class="icon material-icons mute">${mute.value === true ? "music_off" : "music_note"}</i>
+                </button>
+                <button class="button button-outline button-circle">
+                    <i class="icon material-icons">question_mark</i>
+                </button>
+                <button class="button button-outline button-circle">
+                    <i class="icon material-icons">settings</i>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    export default ((props, { $onMounted, $, $store, $update} ) => {
+        const mute = $store.getters.mute;
+        const onMuteClick = () => {
+
+            $store.dispatch('toggleMute')
+            $update()
+        }
+        return $render
+    })
+</script>

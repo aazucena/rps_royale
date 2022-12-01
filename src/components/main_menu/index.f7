@@ -1,0 +1,10 @@
+<template>
+    <div class="main-menu">
+        <slot></slot>
+    </div>
+</template>
+<script>
+    export default (props, {}) => {
+        return $render
+    }
+</script>

@@ -1,36 +1,25 @@
 <template>
   <div class="page" data-name="home">
-    <!-- Top Navbar -->
-    <div class="navbar no-shadow no-hairline">
-      <div class="navbar-bg navbar-bg-transparent"></div>
-      <div class="navbar-inner">
-        <div class="left">
-          <div class="title">RPS Royale</div>
-        </div>
-        <div class="right button-group">
-          <button class="button button-outline button-circle">
-            <i class="icon material-icons">house</i>
-          </button>
-          <button class="button button-outline button-circle">
-            <i class="icon material-icons">settings</i>
-          </button>
-          <button class="button button-outline button-circle">
-            <i class="icon material-icons">music_note</i>
-          </button>
-        </div>
-      </div>
-    </div>
-    <!-- Scrollable page content-->
-    <div class="page-content">
-      <${QR} />
+    <${Navbar} />
+    <div class="page-content hide-navbar-on-scroll">
+      <${MainMenu}>
+        <${MainMenuItem} title="Play"/>
+        <${MainMenuItem} title="Profile"/>
+        <${MainMenuItem} title="Achievements"/>
+        <${MainMenuItem} title="Shop"/>
+        <${MainMenuItem} title="Credits"/>
+        <${MainMenuItem} title="Credits"/>
+      </${MainMenu}>
     </div>
   </div>
 </template>
 <script>
-import QR from "@/components/qr-container.f7"
+import Navbar from '@/components/navbar/index.f7'
+import MainMenu from '@/components/main_menu/index.f7'
+import MainMenuItem from '@/components/main_menu/item.f7'
 export default (props, { $, $on }) => {
   $on('pageInit', () => {
-
+    
   })
   return $render;
 }

@@ -1,0 +1,49 @@
+<template>
+    <div class="page" data-name="login">
+        <div class="page-content bg-color-primary">
+            <div class="display-flex flex-direction-column w-100 justify-content-center h-100">
+                <div class="display-flex flex-direction-column w-100 justify-content-start h-50">
+                    <div class="display-flex flex-direction-row w-100 justify-content-center text-align-center">
+                        <div class="title color-white">RPS Royale</div>
+                    </div>
+                    <div class="display-flex flex-direction-column w-100 justify-content-center mt-3">
+                        <div class="display-flex flex-direction-row w-100 justify-content-center">
+                            <input class="form-control w-88" type="text" placeholder="Username" aria-label="username" />
+                        </div>
+                        <div class="display-flex flex-direction-row w-100 justify-content-center">
+                            <input class="form-control w-88" type="password" placeholder="Password"
+                                aria-label="password" />
+                        </div>
+                    </div>
+                    <div class="display-flex flex-direction-column w-100 justify-content-space-evenly mt-10">
+                        <div class="display-flex flex-direction-row w-100 justify-content-center">
+                            <button class="button button-fill button-round color-secondary w-63 p-6">Login</button>
+                        </div>
+                        <div class="display-flex flex-direction-row w-100 justify-content-center mt-6">
+                            <span class="text-color-white fw-normal fsize-4">New player? <a href="#"
+                                    class='link fw-bolder color-secondary'>Sign up here</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>
+<style>
+    .form-control {
+        margin-top: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+        padding: 0.75rem !important;
+        background-color: white !important;
+        border-radius: .5rem !important;
+    }
+</style>
+<script>
+    export default (props, { $, $on }) => {
+        $on('pageInit', () => {
+
+        })
+        return $render;
+    }
+</script>
