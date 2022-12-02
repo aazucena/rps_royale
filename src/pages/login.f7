@@ -20,7 +20,7 @@
                             <button class="button button-fill button-round color-secondary w-63 p-6">Login</button>
                         </div>
                         <div class="display-flex flex-direction-row w-100 justify-content-center mt-6">
-                            <span class="text-color-white fw-normal fsize-4">New player? <a href="#"
+                            <span class="text-color-white fw-normal fsize-4">New player? <a href="/signin/"
                                     class='link fw-bolder color-secondary'>Sign up here</a></span>
                         </div>
                     </div>
@@ -31,13 +31,6 @@
     </div>
 </template>
 <style>
-    .form-control {
-        margin-top: 0.75rem !important;
-        margin-bottom: 0.75rem !important;
-        padding: 0.75rem !important;
-        background-color: white !important;
-        border-radius: .5rem !important;
-    }
 </style>
 <script>
     export default (props, { $, $on }) => {
