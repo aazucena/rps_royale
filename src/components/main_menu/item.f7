@@ -12,7 +12,7 @@
     export default (props, {}) => {
         var imgPath = props.imgSrc
         var title = props.title ?? 'Play'
-        var menuPath = props.menuHref ?? '#'
+        var menuPath = props.href ?? '#'
 
         return $render
     }

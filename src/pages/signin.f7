@@ -55,12 +55,14 @@
     import directus from '@/js/services/directus.js'
     export default async (props, { $, $on }) => {
         var roles = await directus.roles.readByQuery().then(({ data: role_data }) => role_data.at(0))
-        console.log("🚀 ~ file: signin.f7:53 ~ roles", roles)
         let data = {}
         $on('pageInit', () => {
             $('input').on('keyup', (e) => {
                 $(`input`).removeClass('is-invalid')
                 $(`input`).text('')
+            })
+            $('input').on('click', (e) => {
+                $(`input`).removeClass('is-invalid')
             })
             $('input').on('change', (e) => {
                 data = {
@@ -69,15 +71,16 @@
                 }
             })
             $('button#create_button').on('click', () => {
-                console.log('submit')
                 switch(true) {
                     case !!data.username === false:
                         $('input[name="username"]').addClass('is-invalid')
                         $('input[name="username"]+.invalid-text').text('Your username is not filled')
+                        $('#create_button').addClass('vibrate-3')
                         break
                     case !!data.email === false:
                         $('input[name="email"]').addClass('is-invalid')
                         $('input[name="email"]+.invalid-text').text('Your email is not filled')
+                        $('#create_button').addClass('vibrate-3')
                         break
                     case !!data.password === false:
                         $('input[name="password"]').addClass('is-invalid')
@@ -86,15 +89,35 @@
                     case !!data.repeat_password === false:
                         $('input[name="repeat_password"]').addClass('is-invalid')
                         $('input[name="repeat_password"]+.invalid-text').text('Your repeated password is not filled')
+                        $('#create_button').addClass('vibrate-3')
                         break
                     case data.password !== data.repeat_password:
                         $('input[name="password"]').addClass('is-invalid')
                         $('input[name="repeat_password"]').addClass('is-invalid')
                         $('input[name="repeat_password"]+.invalid-text').text('Your repeated password is no the same as the password')
+                        $('#create_button').addClass('vibrate-3')
                         break
                     default:
+                        delete data.repeat_password
+                        directus.users.createOne({
+                            ...data, 
+                            role: roles.id
+                        }).then(() => {
+                            directus.auth.login({
+                                email: data.email,
+                                password: data.password,
+                            }).then(() => {
+                                window.f7.views.main.router.navigate(
+                                    { path: '/' }, 
+                                )
+                            })
+                        })
                         break
                 }
+                let t = setTimeout(() => {
+                    $('#create_button').removeClass('vibrate-3')
+                    clearTimeout(t)
+                }, 400)
             })
         })
         return $render;

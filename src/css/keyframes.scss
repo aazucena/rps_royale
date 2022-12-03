@@ -102,3 +102,31 @@
                 transform: translate(0);
     }
 }
+
+/**
+ * ----------------------------------------
+ * animation color-change-3x
+ * ----------------------------------------
+ */
+@-webkit-keyframes color-change-3x {
+    0% {
+        background: #8c68ff;
+    }
+    50% {
+        background: #a968ff;
+    }
+    100% {
+        background: #d268ff;
+    }
+}
+@keyframes color-change-3x {
+    0% {
+        background: #8c68ff;
+    }
+    50% {
+        background: #a968ff;
+    }
+    100% {
+        background: #d268ff;
+    }
+}

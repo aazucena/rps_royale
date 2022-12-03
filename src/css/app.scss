@@ -213,3 +213,8 @@
 	-webkit-animation: vibrate-3 0.25s linear both;
         animation: vibrate-3 0.25s linear both;
 }
+
+.color-change-3x {
+	-webkit-animation: color-change-3x 4s linear infinite alternate both;
+        animation: color-change-3x 4s linear infinite alternate both;
+}

@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <!-- Your main view, should have "view-main" class -->
-    <div class="view view-main view-init safe-areas" data-url="/"></div>
+    <div class="view view-main view-init safe-areas" data-url="${hasUser === true ? '/' : '/login/'}"></div>
 
 
     <!-- Popup -->
@@ -30,8 +30,11 @@
   </div>
 </template>
 <script>
-  export default (props, { $f7, $update }) => {
-
+    import directus from '@/js/services/directus.js'
+    export default async (props, { $f7, $update }) => {
+      var hasUser = await directus.users.me.read({ fields: ['*.*.*.*']})
+        .then(() => true)
+        .catch(() => false)
     return $render;
   }
 </script>

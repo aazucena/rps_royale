@@ -3,11 +3,8 @@
     <${Navbar} />
     <div class="page-content hide-navbar-on-scroll">
       <${MainMenu}>
-        <${MainMenuItem} title="Play"/>
+        <${MainMenuItem} href="/qr/scan/" title="Play"/>
         <${MainMenuItem} title="Profile"/>
-        <${MainMenuItem} title="Achievements"/>
-        <${MainMenuItem} title="Shop"/>
-        <${MainMenuItem} title="Credits"/>
         <${MainMenuItem} title="Credits"/>
       </${MainMenu}>
     </div>

@@ -6,22 +6,29 @@
                     <div class="display-flex flex-direction-row w-100 justify-content-center text-align-center">
                         <div class="title color-white">RPS Royale</div>
                     </div>
-                    <div class="display-flex flex-direction-column w-100 justify-content-center mt-3">
+                    <div class="display-flex flex-direction-column w-100 justify-content-center mt-6">
                         <div class="display-flex flex-direction-row w-100 justify-content-center">
-                            <input class="form-control w-88" type="text" placeholder="Username" aria-label="username" />
+                            <div class="display-flex flex-direction-column w-100 align-items-center">
+                                <input class="form-control w-88" type="email" name="email" placeholder="Email" aria-label="email" />
+                                <div class="invalid-text"></div>
+                            </div>
                         </div>
                         <div class="display-flex flex-direction-row w-100 justify-content-center">
-                            <input class="form-control w-88" type="password" placeholder="Password"
-                                aria-label="password" />
+                            <div class="display-flex flex-direction-column w-100 align-items-center">
+                                <input class="form-control w-88" type="password" name="password" placeholder="Password"
+                                    aria-label="password" />
+                                <div class="invalid-text"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="display-flex flex-direction-column w-100 justify-content-space-evenly mt-10">
                         <div class="display-flex flex-direction-row w-100 justify-content-center">
-                            <button class="button button-fill button-round color-secondary w-63 p-6">Login</button>
+                            <button class="button button-fill button-round color-secondary w-63 p-6" id="login">Login</button>
                         </div>
                         <div class="display-flex flex-direction-row w-100 justify-content-center mt-6">
-                            <span class="text-color-white fw-normal fsize-4">New player? <a href="/signin/"
-                                    class='link fw-bolder color-secondary'>Sign up here</a></span>
+                            <span class="text-color-white fw-normal fsize-4">New player?
+                                <a href="/signin/"
+                                    class='link fw-bolder color-secondary ps-1'>Sign up here</a></span>
                         </div>
                     </div>
                 </div>
@@ -33,9 +40,66 @@
 <style>
 </style>
 <script>
-    export default (props, { $, $on }) => {
+    import directus from '@/js/services/directus.js'
+    export default (props, { $, $f7, $on }) => {
+        let data = {}
         $on('pageInit', () => {
-
+            $('input').on('keyup', (e) => {
+                $(`input`).removeClass('is-invalid')
+                $(`input`).text('')
+            })
+            $('input').on('click', (e) => {
+                $(`input`).removeClass('is-invalid')
+            })
+            $('input').on('change', (e) => {
+                data = {
+                    ...data,
+                    [e.target.name]: e.target.value
+                }
+            })
+            $('button#login').on('click', () => {
+            switch(true) {
+                case !!data.email === false:
+                    $('input[name="email"]').addClass('is-invalid')
+                    $('input[name="email"]+.invalid-text').text('Your email is not filled')
+                    $('#login').addClass('vibrate-3')
+                    break
+                case !!data.password === false:
+                    $('input[name="password"]').addClass('is-invalid')
+                    $('input[name="password"]+.invalid-text').text('Your password is not filled')
+                    $('#login').addClass('vibrate-3')
+                    break
+                default:
+                    directus.auth.login({
+                        email: data.email,
+                        password: data.password,
+                    }).then(() => {
+                        let toast = $f7.toast.create({
+                            text: 'Successfully log in.',
+                            position: 'center',
+                            closeTimeout: 1000,
+                        })
+                        toast.open()
+                        setTimeout(() => {
+                            window.f7.views.main.router.navigate(
+                                { path: '/' }, 
+                            )
+                        }, 1000)
+                    }).catch(() => {
+                        let toast = $f7.toast.create({
+                            text: 'Failed to log in.',
+                            position: 'center',
+                            closeTimeout: 1000,
+                        })
+                        toast.open()
+                    })
+                    break
+            }
+            let t = setTimeout(() => {
+                $('#login').removeClass('vibrate-3')
+                clearTimeout(t)
+            }, 400)
+            })
         })
         return $render;
     }

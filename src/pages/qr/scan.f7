@@ -4,6 +4,11 @@
         <div class="navbar no-shadow no-hairline">
             <div class="navbar-bg navbar-bg-transparent"></div>
             <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
                 <div class="right button-group">
                     <button class="button button-outline button-circle">
                         <i class="icon material-icons">question_mark</i>
@@ -24,10 +29,10 @@
             </div>
             <div class="display-flex flex-direction-column w-100 justify-content-center gaps-3">
                 <div class="display-flex flex-direction-row w-100 justify-content-center">
-                    <a href="#" class="button button-fill w-75">Scan</a>
+                    Waiting for a player to scan
                 </div>
-                <div class="display-flex flex-direction-row w-100 justify-content-center">
-                    <a href="#" class="button button-fill w-75">Show</a>
+                <div class="display-flex flex-direction-row w-100 justify-content-center pt-3">
+                    <div class="preloader color-tertiary" style="width: 44px; height: 44px"></div>
                 </div>
             </div>
         </div>
