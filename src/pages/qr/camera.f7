@@ -1,0 +1,63 @@
+<template>
+    <div class="page" data-name="qr_camera">
+        <!-- Top Navbar -->
+        <div class="navbar no-shadow no-hairline">
+            <div class="navbar-bg navbar-bg-transparent"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+                <div class="right button-group">
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">question_mark</i>
+                    </button>
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">settings</i>
+                    </button>
+                    <button class="button button-outline button-circle">
+                        <i class="icon material-icons">music_note</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Scrollable page content-->
+        <div class="page-content">
+            <div class="display-flex w-100 justify-content-center pt-10">
+                <div id="qr-preview"></div>
+            </div>
+        </div>
+    </div>
+</template>
+<style>
+    #qr-preview {
+        width: 62.5% !important;
+        border-radius: 0.5rem;
+    }
+</style>
+<script>
+    export default (props, { $, $on, $f7router }) => {
+        $on('pageInit', async() => {
+            let options = {
+                x: window.screen.width * 0.0625,
+                y: 100,
+                width: window.screen.width * 0.875,
+                height: window.screen.width * 0.875,
+                camera: EmbeddedBarcodeReader.CAMERA_DIRECTION.BACK,
+                toBack: false
+            }
+            
+            EmbeddedBarcodeReader.startCamera(options)
+            EmbeddedBarcodeReader.addBarcodeReadListener((result) => {
+                // Log the barcode
+                console.log('We just read another barcode', result);
+                $f7router.back()
+            })
+        })
+        $on('pageBeforeOut', () => {
+            EmbeddedBarcodeReader.stopCamera()
+        })
+        return $render;
+    }
+</script>

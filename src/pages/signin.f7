@@ -107,6 +107,12 @@
                                 email: data.email,
                                 password: data.password,
                             }).then(() => {
+                                let toast = $f7.toast.create({
+                                    text: 'Successfully created your account.',
+                                    position: 'center',
+                                    closeTimeout: 1000,
+                                })
+                                toast.open()
                                 window.f7.views.main.router.navigate(
                                     { path: '/' }, 
                                 )

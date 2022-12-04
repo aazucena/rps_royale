@@ -24,15 +24,28 @@
         </div>
         <!-- Scrollable page content-->
         <div class="page-content">
-            <div class="display-container">
-                <${QR} />
-            </div>
-            <div class="display-flex flex-direction-column w-100 justify-content-center gaps-3">
-                <div class="display-flex flex-direction-row w-100 justify-content-center">
-                    Waiting for a player to scan
+            <div class="display-flex flex-direction-column w-100 h-88 justify-content-space-between">
+                <div class="display-flex flex-direction-column w-100 justify-content-space-evenly">
+                    <div class="display-container">
+                        <${QR} />
+                    </div>
+                    <div class="display-flex flex-direction-column w-100 justify-content-center ">
+                        <div class="display-flex flex-direction-row w-100 justify-content-center">
+                            <span class="fw-bold fsize-5">
+                                Game Invitation Code
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="display-flex flex-direction-row w-100 justify-content-center pt-3">
-                    <div class="preloader color-tertiary" style="width: 44px; height: 44px"></div>
+                <div class="display-flex flex-direction-column w-100 justify-content-center gaps-3">
+                    <div class="display-flex flex-direction-row w-100 justify-content-center">
+                        <a href="/qr/camera/" class="display-flex flex-direction-row align-items-center button button-fill button-round color-primary w-63 p-6 gaps-2">
+                            <i class="icon material-icons">qr_code_scanner</i>
+                            <span>
+                                Scan QR Code
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,8 +53,8 @@
 </template>
 <style>
     .display-container {
+        padding-top: 3rem;
         padding-bottom: 2rem;
-        padding-top: 2rem;
     }
 </style>
 <script>

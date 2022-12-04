@@ -13,10 +13,14 @@
     "build-cordova:android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && npm run copy-assets && cd cordova && npx cordova build android",
     "cordova:android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && npm run copy-assets && cd cordova && npx cordova run android",
     "cordova-add:android": "cd cordova && npx cordova platform add android",
+    "cordova-rm:android": "cd cordova && npx cordova platform rm android",
     "cordova-watch:android": "cross-env TARGET=cordova cross-env NODE_ENV=production vite build && node ./build/build-cordova.js && npm run copy-assets && cd cordova && npx cordova serve android --live-reload",
     "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/",
     "copy-assets": "cpy ./src/assets/** ./cordova/www/assets/",
-    "cordova-plugin-install": "cd cordova && npx cordova plugin add"
+    "cordova-plugin-install": "cd cordova && npx cordova plugin add",
+    "cordova-plugin-uninstall": "cd cordova && npx cordova plugin remove",
+    "cordova-plugin-list": "cd cordova && npx cordova plugin list",
+    "clean:cordova": "cd cordova && npx cordova clean"
   },
   "browserslist": [
     "IOS >= 13",
@@ -30,6 +34,7 @@
     "dom7": "^4.0.4",
     "framework7": "^7.0.9",
     "framework7-icons": "^5.0.5",
+    "html5-qrcode": "^2.3.4",
     "material-icons": "^1.12.2",
     "skeleton-elements": "^4.0.1",
     "socket.io": "^4.5.4",

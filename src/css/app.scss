@@ -74,6 +74,25 @@
   font-size: 2.5rem !important;
 }
 
+
+$font-weights: (
+  "thin": 100,
+  "xlight": 200,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "xbold": 800,
+  "black": 900,
+);
+
+@each $name, $fw in $font-weights {
+  .fw-#{$name} {
+    font-weight: $fw !important;
+  }
+}
+
 @for $i from 1 through 100 {
   .w-#{$i} {
     width: $i * 1% !important;
@@ -132,6 +151,9 @@
   }
   .me-#{$i} {
     margin-right: $i * 0.25rem !important;
+  }
+  .level-#{$i} {
+    z-index: $i !important;
   }
 }
 
