@@ -37,6 +37,8 @@
     }
 </style>
 <script>
+    import ably from '@/js/services/ably.js'
+    import directus from '@/js/services/directus.js'
     export default (props, { $, $on, $f7router }) => {
         $on('pageInit', async() => {
             let options = {
@@ -49,9 +51,10 @@
             }
             
             EmbeddedBarcodeReader.startCamera(options)
-            EmbeddedBarcodeReader.addBarcodeReadListener((result) => {
+            EmbeddedBarcodeReader.addBarcodeReadListener(async(result) => {
                 // Log the barcode
-                console.log('We just read another barcode', result);
+                var user = await directus.users.readOne(result)
+                console.log('We just read another barcode', user)
                 $f7router.back()
             })
         })

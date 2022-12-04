@@ -31,10 +31,14 @@
 </template>
 <script>
     import directus from '@/js/services/directus.js'
+    import ably from '@/js/services/ably.js'
     export default async (props, { $f7, $update }) => {
       var hasUser = await directus.users.me.read({ fields: ['*.*.*.*']})
         .then(() => true)
         .catch(() => false)
+      ably.connection.on('connected', function() {
+          console.log('Successfully connected')
+      })
     return $render;
   }
 </script>

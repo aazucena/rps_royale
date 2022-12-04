@@ -10,9 +10,11 @@
 </style>
 <script>
 import QRCode from "qrcode"
-export default (props, { $, $onMounted, $el }) => {
+import directus from '@/js/services/directus.js'
+export default async(props, { $, $onMounted, $el }) => {
+    var id = await directus.users.me.read({ fields: ['id'] }).then((user) => user.id)
     $onMounted(() => {
-        QRCode.toCanvas('text', { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
+        QRCode.toCanvas(id, { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
             if (err) throw err
             var container = $el.value
             container.append(canvas)

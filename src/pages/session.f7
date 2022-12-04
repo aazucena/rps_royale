@@ -1,0 +1,8 @@
+<template>
+
+</template>
+<script>
+    export default async(props, { $, $onMounted, $el }) => {
+        return $render
+    }
+</script>
