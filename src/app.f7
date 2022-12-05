@@ -45,10 +45,13 @@
     import ably from '@/js/services/ably.js'
     export default async (props, { $f7, $update }) => {
       var hasUser = await directus.users.me.read({ fields: ['*.*.*.*']})
-        .then(() => true)
+        .then(() => {
+          console.log('Successfully connected to Directus CMS')
+          return true
+        })
         .catch(() => false)
       ably.connection.on('connected', function() {
-          console.log('Successfully connected')
+          console.log('Successfully connected to Ably WS Server')
       })
     return $render;
   }

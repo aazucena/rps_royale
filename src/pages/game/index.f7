@@ -41,11 +41,20 @@
         var currentChoice
         var session_id = props?.id ?? uuid()
         var choices = ['rock', 'paper', 'scissor']
+        var channel = ably.channels.get(session_id)
         var game = new Game()
         var user = await directus.users.me.read({ fields: ['*.*.*.*.*.*']})
+        var session = await directus.items('sessions').readOne(session_id)
+        .catch(() => {
+            $f7router.navigate('/')
+        })
         var turn = 0
         var round = 1
         $on('pageInit', () => {
+            channel.subscribe('game', (message) => {
+                console.log(message)
+            })
+
             let reset = (id) => {
                 let others = $(`.card-object:not(${id})`)
                 others.removeClass('slide-top-reverse')
@@ -110,13 +119,18 @@
                     })
                 }
                 round = result.round
-                console.log("🚀 ~ file: game.f7:107 ~ $ ~ result", result)
                 reset('#' + currentChoice)
                 slide('#' + currentChoice)
                 currentChoice = null
                 $('#cancel').attr('disabled', true)
                 $('#continue').attr('disabled', true)
                 $update()
+            })
+            $on('pageBeforeOut', () => {
+                channel.detach()
+                channel.on('detached', (state) => {
+                    console.log('Detached from the channel:', id);
+                })
             })
         })
         return $render

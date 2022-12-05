@@ -1,27 +1,7 @@
 <template>
     <div class="page" data-name="qr_camera">
         <!-- Top Navbar -->
-        <div class="navbar no-shadow no-hairline">
-            <div class="navbar-bg navbar-bg-transparent"></div>
-            <div class="navbar-inner">
-                <div class="left">
-                    <a href="#" class="link back">
-                        <i class="icon icon-back"></i>
-                    </a>
-                </div>
-                <div class="right button-group">
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">question_mark</i>
-                    </button>
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">settings</i>
-                    </button>
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">music_note</i>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <${Navbar} />
         <!-- Scrollable page content-->
         <div class="page-content">
             <div class="display-flex w-100 justify-content-center pt-10">
@@ -37,6 +17,7 @@
     }
 </style>
 <script>
+    import Navbar from '@/components/navbar/back.f7'
     import ably from '@/js/services/ably.js'
     import directus from '@/js/services/directus.js'
     export default async(props, { $, $on, $f7router }) => {
@@ -54,8 +35,10 @@
             EmbeddedBarcodeReader.startCamera(options)
             EmbeddedBarcodeReader.addBarcodeReadListener(async(result) => {
                 let { id, session_id } = JSON.parse(result)
+                let channel = ably.channels.get(session_id)
+                channel.publish('qr_invite', session_id)
                 // Log the barcode
-                await directus.items('session').createOne({
+                await directus.items('sessions').createOne({
                     id: session_id,
                     player_one: id,
                     player_two: user.id,

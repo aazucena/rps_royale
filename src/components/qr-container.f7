@@ -14,7 +14,7 @@ import directus from '@/js/services/directus.js'
 import { v4 as uuid } from 'uuid'
 export default async(props, { $, $onMounted, $el }) => {
     var id = await directus.users.me.read({ fields: ['id'] }).then((user) => user.id)
-    var sid = uuid()
+    var sid = props?.id ?? uuid()
     $onMounted(() => {
         let payload = {
             session_id: sid,

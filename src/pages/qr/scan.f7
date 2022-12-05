@@ -1,33 +1,12 @@
 <template>
     <div class="page" data-name="qr_scan">
-        <!-- Top Navbar -->
-        <div class="navbar no-shadow no-hairline">
-            <div class="navbar-bg navbar-bg-transparent"></div>
-            <div class="navbar-inner">
-                <div class="left">
-                    <a href="#" class="link back">
-                        <i class="icon icon-back"></i>
-                    </a>
-                </div>
-                <div class="right button-group">
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">question_mark</i>
-                    </button>
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">settings</i>
-                    </button>
-                    <button class="button button-outline button-circle">
-                        <i class="icon material-icons">music_note</i>
-                    </button>
-                </div>
-            </div>
-        </div>
+        <${Navbar} />
         <!-- Scrollable page content-->
         <div class="page-content">
             <div class="display-flex flex-direction-column w-100 h-88 justify-content-space-between">
                 <div class="display-flex flex-direction-column w-100 justify-content-space-evenly">
                     <div class="display-container">
-                        <${QR} />
+                        <${QR} id='${id}'/>
                     </div>
                     <div class="display-flex flex-direction-column w-100 justify-content-center ">
                         <div class="display-flex flex-direction-row w-100 justify-content-center">
@@ -59,9 +38,32 @@
 </style>
 <script>
     import QR from "@/components/qr-container.f7"
-    export default (props, { $, $on }) => {
+    import Navbar from '@/components/navbar/back.f7'
+    import ably from '@/js/services/ably.js'
+    import directus from '@/js/services/directus.js'
+    import { v4 as uuid } from 'uuid'
+    export default async(props, { $, $on, $f7router }) => {
+        var id = uuid()
+        var channel = ably.channels.get(id)
         $on('pageInit', () => {
-        
+            channel.subscribe('qr_invite', async(message) => {
+                console.log("🚀 ~ file: scan.f7:50 ~ channel.subscribe ~ message", message)
+                var session = await directus.items('sessions').readOne(message.data)
+                    .then((s) => {
+                    console.log('Message received:', message)
+                    $f7router.navigate('/game/', {
+                        props: {
+                            id: s.id,
+                        }
+                    })
+                })
+            })
+        })
+        $on('pageBeforeOut', () => {
+            channel.detach()
+            channel.on('detached', (state) => {
+                console.log('Detached from the channel:', id);
+            })
         })
         return $render;
     }
