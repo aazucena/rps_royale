@@ -5,6 +5,8 @@ import QRCameraPage from '../pages/qr/camera.f7'
 import QRScanPage from '../pages/qr/scan.f7'
 import SignInPage from '../pages/signin.f7'
 import LogInPage from '../pages/login.f7'
+import GamePage from '../pages/game/index.f7'
+import GameResultPage from '../pages/game/result.f7'
 
 var routes = [
   {
@@ -26,6 +28,19 @@ var routes = [
   {
     path: '/login/',
     component: LogInPage,
+  },
+  {
+    path: '/game/:id',
+    component: GamePage,
+  },
+  {
+    path: '/game/',
+    component: GamePage,
+  },
+  {
+    name: 'result',
+    path: '/game/result/:id',
+    component: GameResultPage,
   },
   {
     path: '(.*)',

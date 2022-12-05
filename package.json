@@ -40,7 +40,8 @@
     "material-icons": "^1.12.2",
     "skeleton-elements": "^4.0.1",
     "socket.io": "^4.5.4",
-    "swiper": "^8.4.5"
+    "swiper": "^8.4.5",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "cpy-cli": "^4.2.0",

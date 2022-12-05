@@ -1,0 +1,124 @@
+<template>
+    <div class="page" data-name="game">
+        <div class="page-content">
+            <div class="mt-5 display-flex flex-direction-column h-82 justify-content-space-between">
+                <div class="display-flex justify-content-center">
+                    <div class="title display-flex w-100 flex-direction-column mt-10">
+                        <div class="display-flex justify-content-center">Round ${round}</div>
+                        <!-- <${StatusIndicator} /> -->
+                    </div>
+                </div>
+                <div class="display-flex flex-direction-column h-50 justify-content-end">
+                    <div class="display-flex flex-direction-row justify-content-space-around">
+                        <a href="#" class="button card-object" id="rock">
+                            <div class="card-object-title">Rock</div>
+                        </a>
+                        <a href="#" class="button card-object" id="paper">
+                            <div class="card-object-title">Paper</div>
+                        </a>
+                        <a href="#" class="button card-object" id="scissor">
+                            <div class="card-object-title">Scissor</div>
+                        </a>
+                    </div>
+                    <div class="mt-10 display-flex flex-direction-row w-100 justify-content-center">
+                        <div class="display-flex flex-direction-column align-items-center w-88 justify-content-space-evenly">
+                            <button class="button button-fill button-round color-tertiary w-88 p-6 my-2" id="continue" disabled>Continue</button>
+                            <button class="button button-fill button-round color-secondary w-88 p-6 my-2" id="cancel" disabled>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import StatusIndicator from '@/components/status-indicator.f7'
+    import Game from '@/js/services/game.js'
+    import directus from '@/js/services/directus.js'
+    import ably from '@/js/services/ably.js'
+    import { v4 as uuid } from 'uuid'
+    export default async(props, { $, $on, $update, $f7router }) => {
+        var currentChoice
+        var session_id = props?.id ?? uuid()
+        var choices = ['rock', 'paper', 'scissor']
+        var game = new Game()
+        var user = await directus.users.me.read({ fields: ['*.*.*.*.*.*']})
+        var turn = 0
+        var round = 1
+        $on('pageInit', () => {
+            let reset = (id) => {
+                let others = $(`.card-object:not(${id})`)
+                others.removeClass('slide-top-reverse')
+                others.removeClass('slide-top')
+                others.removeClass('active')
+            }
+            let slide = (id) => {
+                let card = $(id)
+                let disabled = $('#cancel').attr('disabled')
+                card.toggleClass('active')
+                if (card.hasClass('slide-top')) {
+                    card.removeClass('slide-top')
+                    card.addClass('slide-top-reverse')
+                    $('#cancel').attr('disabled', true)
+                    $('#continue').attr('disabled', true)
+                    setTimeout(() => {
+                        card.removeClass('slide-top-reverse')
+                    }, 500)
+                } else {
+                    card.removeClass('slide-top-reverse')
+                    card.addClass('slide-top')
+                    $('#cancel').removeAttr('disabled')
+                    $('#continue').removeAttr('disabled')
+                }
+            }
+            choices.forEach((choice) => {
+                let id = `#${choice}`
+                $(id).on('click', () => {
+                    currentChoice = choice
+                    reset(id)
+                    slide(id)
+                })
+            })
+            $('#cancel').on('click', () => {
+                reset('#' + currentChoice)
+                slide('#' + currentChoice)
+                currentChoice = null
+                $('#cancel').attr('disabled', true)
+                $('#continue').attr('disabled', true)
+            })
+            
+            $('#continue').on('click', () => {
+                let getRandomInt = () => Math.floor(Math.random() * choices.length)
+                let index = getRandomInt()
+                let tmp = {
+                    id: '1234',
+                    choice: choices[index]
+                }
+                let usr = {
+                    ...user,
+                    choice: currentChoice
+                }
+                let lineup = turn === 0 ? [usr, tmp] : [tmp, usr] 
+                turn = (turn + 1) % 2
+                let result = game.playRound(...lineup)
+                if (result.state === 'winner') {
+                    $f7router.navigate({
+                        name: 'result',
+                        params: {
+                            id: session_id
+                        }
+                    })
+                }
+                round = result.round
+                console.log("🚀 ~ file: game.f7:107 ~ $ ~ result", result)
+                reset('#' + currentChoice)
+                slide('#' + currentChoice)
+                currentChoice = null
+                $('#cancel').attr('disabled', true)
+                $('#continue').attr('disabled', true)
+                $update()
+            })
+        })
+        return $render
+    }
+</script>

@@ -1,0 +1,12 @@
+<template>
+    <div class="page" data-name="result">
+        <div class="page-content">
+            Result
+        </div>
+    </div>
+</template>
+<<script>
+export default async(props, { $, $on}) => {
+    return $render    
+}
+</script>

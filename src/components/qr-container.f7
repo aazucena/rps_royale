@@ -11,10 +11,16 @@
 <script>
 import QRCode from "qrcode"
 import directus from '@/js/services/directus.js'
+import { v4 as uuid } from 'uuid'
 export default async(props, { $, $onMounted, $el }) => {
     var id = await directus.users.me.read({ fields: ['id'] }).then((user) => user.id)
+    var sid = uuid()
     $onMounted(() => {
-        QRCode.toCanvas(id, { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
+        let payload = {
+            session_id: sid,
+            id,
+        }
+        QRCode.toCanvas(JSON.stringify(payload), { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
             if (err) throw err
             var container = $el.value
             container.append(canvas)

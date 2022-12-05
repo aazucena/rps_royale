@@ -9,7 +9,7 @@
                 <button class="button button-outline button-circle">
                     <i class="icon material-icons">question_mark</i>
                 </button>
-                <button class="button button-outline button-circle">
+                <button class="button button-outline button-circle popover-open" data-popover=".popover-settings">
                     <i class="icon material-icons">settings</i>
                 </button>
             </div>

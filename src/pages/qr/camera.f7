@@ -39,7 +39,8 @@
 <script>
     import ably from '@/js/services/ably.js'
     import directus from '@/js/services/directus.js'
-    export default (props, { $, $on, $f7router }) => {
+    export default async(props, { $, $on, $f7router }) => {
+        let user = await directus.users.me.read({ fields: ['*.*.*.*.*']})
         $on('pageInit', async() => {
             let options = {
                 x: window.screen.width * 0.0625,
@@ -52,10 +53,19 @@
             
             EmbeddedBarcodeReader.startCamera(options)
             EmbeddedBarcodeReader.addBarcodeReadListener(async(result) => {
+                let { id, session_id } = JSON.parse(result)
                 // Log the barcode
-                var user = await directus.users.readOne(result)
-                console.log('We just read another barcode', user)
-                $f7router.back()
+                await directus.items('session').createOne({
+                    id: session_id,
+                    player_one: id,
+                    player_two: user.id,
+                }).then((s) => {
+                    $f7router.navigate('/game/', {
+                        props: {
+                            id: session_id,
+                        }
+                    })
+                })
             })
         })
         $on('pageBeforeOut', () => {

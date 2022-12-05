@@ -1,5 +1,6 @@
 <template>
-
+    <div class="page" data-name="credits">
+    </div>
 </template>
 <script>
     export default async(props, { $, $on }) => {

@@ -5,6 +5,7 @@
       <${MainMenu}>
         <${MainMenuItem} href="/qr/scan/" title="Play"/>
         <${MainMenuItem} title="Profile"/>
+        <!-- <${MainMenuItem} href="/game/" title="Test"/> -->
         <${MainMenuItem} title="Credits"/>
       </${MainMenu}>
     </div>

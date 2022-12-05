@@ -1,8 +1,0 @@
-<template>
-
-</template>
-<script>
-    export default async(props, { $, $on }) => {
-        return $render
-    }
-</script>

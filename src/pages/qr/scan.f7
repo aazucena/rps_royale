@@ -61,7 +61,7 @@
     import QR from "@/components/qr-container.f7"
     export default (props, { $, $on }) => {
         $on('pageInit', () => {
-
+        
         })
         return $render;
     }
