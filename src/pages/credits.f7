@@ -11,11 +11,16 @@
             </div>
         </div>
         <div class="page-content">
-            <div class="display-flex w-100 h-89 flex-direction-column justify-content-space-between my-3">
-                <div class="display-flex flex-direction-column w-100 h-85 justify-content-start pt-2">
-                    <div class="display-flex flex-direction-row w-100 justify-content-center mt-2">
+            <div class="display-flex w-100 h-89 flex-direction-column justify-content-space-between">
+                <div class="display-flex flex-direction-column w-100 h-85 justify-content-start">
+                    <div class="display-flex flex-direction-row w-100 justify-content-center">
                         <div class="display-flex flex-direction-row align-items-center w-100 fsize-7 fw-bold justify-content-center">
                             Credits
+                        </div>
+                    </div>
+                    <div class="display-flex flex-direction-row w-100 justify-content-center mt-2">
+                        <div class="display-flex flex-direction-row align-items-center w-100 fsize-7 fw-bold justify-content-center">
+                            <div style="border-top: 0.125px solid rgba(0, 0, 0, 0.25);" class="display-flex w-50"></div>
                         </div>
                     </div>
                     <div class="display-flex flex-direction-row w-100 justify-content-center mt-6">
