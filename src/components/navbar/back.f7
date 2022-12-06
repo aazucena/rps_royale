@@ -1,5 +1,5 @@
 <template>
-    <div class="navbar no-shadow no-hairline">
+    <div class="navbar no-shadow no-hairline level-100">
         <div class="navbar-bg navbar-bg-white"></div>
         <div class="navbar-inner">
             <div class="left">
@@ -8,10 +8,10 @@
                 </a>
             </div>
             <div class="right button-group">
-                <button class="button button-outline button-circle" @click=${onMuteClick}>
+                <button class="button button-outline button-circle display-none" @click=${onMuteClick}>
                     <i class="icon material-icons mute">${mute.value === true ? "music_off" : "music_note"}</i>
                 </button>
-                <button class="button button-outline button-circle">
+                <button class="button button-outline button-circle popup-open" data-popup=".popup-help">
                     <i class="icon material-icons">question_mark</i>
                 </button>
                 <button class="button button-outline button-circle popover-open" data-popover=".popover-settings">

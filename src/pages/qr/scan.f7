@@ -16,9 +16,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="display-flex flex-direction-column w-100 justify-content-center gaps-3">
+                <div class="${hasCamera === true ? 'display-flex' : 'display-none'} flex-direction-column w-100 justify-content-center gaps-3">
                     <div class="display-flex flex-direction-row w-100 justify-content-center">
-                        <a href="/qr/camera/" class="display-flex flex-direction-row align-items-center button button-fill button-round color-primary w-63 p-6 gaps-2">
+                        <a href="/qr/camera/" id="qr_scan_button" class="display-flex flex-direction-row align-items-center button button-fill button-round color-primary w-63 p-6 gaps-2">
                             <i class="icon material-icons">qr_code_scanner</i>
                             <span>
                                 Scan QR Code
@@ -28,11 +28,33 @@
                 </div>
             </div>
         </div>
+        <div class="popup popup-help">
+            <div class="display-flex w-100 h-89 flex-direction-column justify-content-space-between my-3">
+                <div class="display-flex w-100 flex-direction-column justify-content-start">
+                    <div class="display-flex w-100 flex-direction-row justify-content-center mb-2">
+                    <div class="w-100 fsize-6 fw-bold ps-4">Help - QR Code</div>
+                    </div>
+                    <div class="display-flex w-100 flex-direction-row justify-content-center mb-2">
+                        <div class="w-75 fsize-4 fw-medium">
+                            <p class="ps-3">
+                                This QR Code is generated as a key for other players to play the game peer-to-peer. 
+                                So share them with your other players.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="display-flex w-100 flex-direction-column justify-content-end">
+                    <div class="display-flex w-100 flex-direction-row justify-content-center">
+                        <a class="button button-fill button-round popup-close color-secondary w-88 p-6 my-2" href="#">I understand</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style>
     .display-container {
-        padding-top: 3rem;
+        padding-top: 0rem;
         padding-bottom: 2rem;
     }
 </style>
@@ -42,27 +64,31 @@
     import ably from '@/js/services/ably.js'
     import directus from '@/js/services/directus.js'
     import { v4 as uuid } from 'uuid'
-    export default async(props, { $, $on, $f7router }) => {
+    export default async(props, { $, $on, $f7router, $f7 }) => {
         var id = uuid()
         var channel = ably.channels.get(id)
+        var hasCamera = (typeof EmbeddedBarcodeReader !== 'undefined')
+
         $on('pageInit', () => {
             channel.subscribe('qr_invite', async(message) => {
-                console.log("🚀 ~ file: scan.f7:50 ~ channel.subscribe ~ message", message)
-                var session = await directus.items('sessions').readOne(message.data)
-                    .then((s) => {
-                    console.log('Message received:', message)
-                    $f7router.navigate('/game/', {
-                        props: {
-                            id: s.id,
-                        }
+                $f7.dialog.preloader('Loading Game Session')
+                setTimeout(async() => {
+                    var session = await directus.items('sessions').readOne(message.data)
+                        .then((s) => {
+                        console.log('Message received:', message)
+                        $f7router.navigate('/game/', {
+                            props: {
+                                id: s.id,
+                            }
+                        })
+                    })
+                }, 3000)
+                $('#qr_scan_button').on('click', () => {
+                    channel.detach()
+                    channel.on('detached', (state) => {
+                        console.log('Detached from the channel:', id);
                     })
                 })
-            })
-        })
-        $on('pageBeforeOut', () => {
-            channel.detach()
-            channel.on('detached', (state) => {
-                console.log('Detached from the channel:', id);
             })
         })
         return $render;

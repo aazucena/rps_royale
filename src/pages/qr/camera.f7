@@ -4,8 +4,28 @@
         <${Navbar} />
         <!-- Scrollable page content-->
         <div class="page-content">
-            <div class="display-flex w-100 justify-content-center pt-10">
-                <div id="qr-preview"></div>
+            <div class="display-flex w-100 h-88 flex-direction-column justify-content-end pb-10">
+                ${status === 'loading' && $h`<div class='display-flex w-100 flex-direction-row justify-content-center pt-20'>
+                    <div class="preloader" style="width: 44px; height: 44px"></div>
+                </div>`}
+                <div class='display-flex w-100 flex-direction-row justify-content-center pt-5'>
+                    ${message}
+                </div>
+            </div>
+        </div>
+        <div class="popup popup-help">
+            <div class="display-flex w-100 flex-direction-column justify-content-start">
+                <div class="display-flex w-100 flex-direction-row justify-content-center mb-2">
+                <div class="w-100 fsize-6 fw-bold ps-4">Help - Camera</div>
+                </div>
+                <div class="display-flex w-100 flex-direction-row justify-content-center mb-2">
+                    <div class="w-75 fsize-4 fw-medium">
+                        <p class="ps-3">
+                            The camera detects the QR Code and scan to get the key information. 
+                            If the app beeps, then it will redirect you and the host to the game.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -20,39 +40,71 @@
     import Navbar from '@/components/navbar/back.f7'
     import ably from '@/js/services/ably.js'
     import directus from '@/js/services/directus.js'
-    export default async(props, { $, $on, $f7router }) => {
+    export default async(props, { $, $on, $f7, $f7router, $update }) => {
         let user = await directus.users.me.read({ fields: ['*.*.*.*.*']})
+        var hasCamera = (typeof EmbeddedBarcodeReader !== 'undefined')
+        var source = hasCamera === true ? EmbeddedBarcodeReader : null
+        var status = hasCamera === true ? "loading" : "missing"
+        var statusMsg = () => {
+            switch(status) {
+                case 'loading':
+                    return "Scanning for QR Code Invitation..."
+                case 'success':
+                    return "Successfully scanned the QR Code"
+                case 'missing':
+                    return "Your Device does not have a Camera Source"
+                default:
+                    return "Failed to scan the QR Code"
+            }
+        }
+        var message = statusMsg()
         $on('pageInit', async() => {
-            let options = {
-                x: window.screen.width * 0.0625,
-                y: 100,
-                width: window.screen.width * 0.875,
-                height: window.screen.width * 0.875,
-                camera: EmbeddedBarcodeReader.CAMERA_DIRECTION.BACK,
-                toBack: false
+            if (hasCamera === true) {
+                let options = {
+                    x: window.screen.width * 0.0625,
+                    y: 100,
+                    width: window.screen.width * 0.875,
+                    height: window.screen.width * 0.875,
+                    camera: source.CAMERA_DIRECTION.BACK,
+                    toBack: false
+                }
+                source.startCamera(options)
+                source.addBarcodeReadListener(async(result) => {
+                    let response = JSON.parse(result)
+                    if (!!response.session_id === true) {
+                        var { id, session_id } = response
+                        let channel = ably.channels.get(session_id)
+                        channel.publish('qr_invite', session_id)
+                        status = 'success'
+                        message = statusMsg()
+                        // Log the barcode
+                        $f7.dialog.preloader('Loading Game Session')
+                        source.stopCamera()
+                        await directus.items('sessions').createOne({
+                            id: session_id,
+                            host: id,
+                            player_one: id,
+                            player_two: user.id,
+                        }).then((s) => {
+                            $f7router.navigate('/game/', {
+                                props: {
+                                    id: session_id,
+                                }
+                            })
+                        })
+                    } else {
+                        status = 'fail'
+                        message = statusMsg()
+                    }
+                    $update()
+                })
             }
             
-            EmbeddedBarcodeReader.startCamera(options)
-            EmbeddedBarcodeReader.addBarcodeReadListener(async(result) => {
-                let { id, session_id } = JSON.parse(result)
-                let channel = ably.channels.get(session_id)
-                channel.publish('qr_invite', session_id)
-                // Log the barcode
-                await directus.items('sessions').createOne({
-                    id: session_id,
-                    player_one: id,
-                    player_two: user.id,
-                }).then((s) => {
-                    $f7router.navigate('/game/', {
-                        props: {
-                            id: session_id,
-                        }
-                    })
-                })
-            })
         })
         $on('pageBeforeOut', () => {
-            EmbeddedBarcodeReader.stopCamera()
+            if (hasCamera === true) {
+                source.stopCamera()
+            }
         })
         return $render;
     }

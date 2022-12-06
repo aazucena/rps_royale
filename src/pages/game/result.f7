@@ -1,12 +1,31 @@
 <template>
     <div class="page" data-name="result">
         <div class="page-content">
-            Result
+            <div class="display-flex flex-direction-column w-100 h-85 justify-content-space-between pt-5">
+                <div class="display-flex flex-direction-row w-100 justify-content-center mt-10 h-100">
+                    <div class="display-flex flex-direction-row align-items-center w-100 fsize-5 justify-content-center">
+                        ${status}
+                    </div>
+                </div>
+                <div class="mt-10 display-flex flex-direction-row w-100 justify-content-center">
+                    <div class="display-flex flex-direction-column align-items-center w-88 justify-content-space-evenly">
+                        <a href="/qr/scan/" class="button button-fill button-round color-tertiary w-88 p-6 my-2">Try Again</a>
+                        <a href="/" class="button button-fill button-round color-secondary w-88 p-6 my-2">Exit</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <<script>
-export default async(props, { $, $on}) => {
+import directus from '@/js/services/directus.js'
+export default async(props, { $, $on }) => {
+    let user = await directus.users.me.read({ fields: ['*.*.*.*']})
+    let status = ''
+    let session = await directus.items('sessions').readOne(props.id, { fields: ['*.*.*.*.*']}).then((session) => {
+        status = session.winner.id === user.id ? `You won the game!` : `You lost the game...`
+    })
+
     return $render    
 }
 </script>

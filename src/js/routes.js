@@ -7,6 +7,7 @@ import SignInPage from '../pages/signin.f7'
 import LogInPage from '../pages/login.f7'
 import GamePage from '../pages/game/index.f7'
 import GameResultPage from '../pages/game/result.f7'
+import CreditsPage from '../pages/credits.f7'
 
 var routes = [
   {
@@ -36,6 +37,10 @@ var routes = [
   {
     path: '/game/',
     component: GamePage,
+  },
+  {
+    path: '/credits/',
+    component: CreditsPage,
   },
   {
     name: 'result',

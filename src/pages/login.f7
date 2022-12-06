@@ -37,8 +37,6 @@
         </div>
     </div>
 </template>
-<style>
-</style>
 <script>
     import directus from '@/js/services/directus.js'
     export default (props, { $, $f7, $on }) => {
@@ -78,6 +76,7 @@
                             text: 'Successfully log in.',
                             position: 'center',
                             closeTimeout: 1000,
+                            icon: `<i class="icon material-icons p-4" style="color: #198754;">check_circle</i>`,
                         })
                         toast.open()
                         setTimeout(() => {
@@ -90,6 +89,7 @@
                             text: 'Failed to log in.',
                             position: 'center',
                             closeTimeout: 1000,
+                            icon: `<i class="icon material-icons p-4" style="color: #dc3545;">error</i>`,
                         })
                         toast.open()
                     })

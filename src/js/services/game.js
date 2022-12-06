@@ -57,7 +57,9 @@ export default class {
                 },
                 totalRounds: this.round + 1,
                 round: this.round + 1,
+                prevRound: this.round,
                 history: this.history,
+                winner: judgeStatus,
             }
         }
         return {
@@ -67,7 +69,9 @@ export default class {
                 ...this.score,
             },
             round: this.round + 1,
+            prevRound: this.round,
             history: this.history,
+            winner: judgeStatus,
         }
 
     }

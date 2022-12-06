@@ -1,7 +1,66 @@
 <template>
-    <div class="page" data-name="credits">
+    <div class="page" data-name="credits">    
+        <div class="navbar no-shadow no-hairline">
+            <div class="navbar-bg navbar-bg-transparent"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="display-flex w-100 h-89 flex-direction-column justify-content-space-between my-3">
+                <div class="display-flex flex-direction-column w-100 h-85 justify-content-start pt-2">
+                    <div class="display-flex flex-direction-row w-100 justify-content-center mt-2">
+                        <div class="display-flex flex-direction-row align-items-center w-100 fsize-7 fw-bold justify-content-center">
+                            Credits
+                        </div>
+                    </div>
+                    <div class="display-flex flex-direction-row w-100 justify-content-center mt-6">
+                        <div class="display-flex flex-direction-row align-items-center w-88 fsize-5">
+                            <div class="display-flex flex-direction-column gaps-3">
+                                <div class="display-flex flex-direction-column gaps-2">
+                                    <div class="display-flex fw-bold">Mobile Developer</div>
+                                    <div class="ms-4 fsize-4 display-flex fw-medium">Aldrin Azucena</div>
+                                </div>
+                                <div class="display-flex flex-direction-column gaps-2">
+                                    <div class="display-flex fw-bold">Mobile UI/UX Designer</div>
+                                    <div class="ms-4 fsize-4 display-flex fw-medium">Aldrin Azucena</div>
+                                </div>
+                                <div class="display-flex flex-direction-column gaps-2">
+                                    <div class="display-flex fw-bold">CSS/SCSS Resources</div>
+                                    <a class="link external ms-4 fsize-4 display-flex justify-content-start fw-medium no-ripple" href="https://animista.net/">Animista</a>
+                                    <a class="link external ms-4 fsize-4 display-flex justify-content-start fw-medium no-ripple" href="https://html-css-js.com/css/generator/box-shadow/">Box Shadow Generator</a>
+                                </div>
+                                <div class="display-flex flex-direction-column gaps-2">
+                                    <div class="display-flex fw-bold">Backend Services</div>
+                                    <a class="link external ms-4 fsize-4 display-flex justify-content-start fw-medium no-ripple" href="https://directus.io/">Directus (CMS/API)</a>
+                                    <a class="link external ms-4 fsize-4 display-flex justify-content-start fw-medium no-ripple" href="https://ably.com/">Ably (Web Socket)</a>
+                                </div>
+                                <div class="display-flex flex-direction-column gaps-2">
+                                    <div class="display-flex fw-bold">Information Sources</div>
+                                    <a class="link external ms-4 fsize-4 display-flex justify-content-start fw-medium no-ripple" href="https://wrpsa.com">The World Rock Paper Scissors Association (WRPSA)</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="display-flex w-100 flex-direction-column justify-content-end">
+                </div>
+            </div>
+        </div>
     </div>
 </template>
+<style>
+    .navbar-bg.navbar-bg-transparent {
+        background: transparent !important;
+    }
+    a {
+        text-decoration: none;
+    }
+</style>
 <script>
     export default async(props, { $, $on }) => {
         return $render

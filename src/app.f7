@@ -8,50 +8,63 @@
       <div class="popover-inner w-100">
         <div class="block-title">Settings</div>
         <div class="list">
-          <ul>
+          <ul class="mt-5">
             <li class="display-flex justify-content-end w-100">
-              <a class="list-button item-link w-100 display-flex justify-content-end pe-6" href="#">
-                <i class="px-2 icon material-icons display-flex align-items-center h-100">check</i>
-                <span class="display-flex align-items-center h-100">Link 1</span>
-              </a>
-            </li>
-            <li class="display-flex justify-content-end w-100">
-              <a class="list-button item-link w-100 display-flex justify-content-end pe-6" href="#">
-                <i class="px-2 icon material-icons display-flex align-items-center h-100">check</i>
-                <span class="display-flex align-items-center h-100">Link 2</span>
-              </a>
-            </li>
-            <li class="display-flex justify-content-end w-100">
-              <a class="list-button item-link w-100 display-flex justify-content-end pe-6" href="#">
-                <i class="px-2 icon material-icons display-flex align-items-center h-100">check</i>
-                <span class="display-flex align-items-center h-100">Link 4</span>
-              </a>
-            </li>
-            <li class="display-flex justify-content-end w-100">
-              <a class="list-button item-link w-100 display-flex justify-content-end pe-6" href="#">
-                <i class="px-2 icon material-icons display-flex align-items-center h-100">info</i>
-                <span class="display-flex align-items-center h-100">About</span>
+              <a class="list-button item-link w-100 display-flex justify-content-center pe-6" href="#" id="logout">
+                <div class="display-flex flex-direction-row justify-content-start">
+                  <i class="px-2 icon material-icons display-flex align-items-center flex-grow-1 h-100">logout</i>
+                  <span class="display-flex align-items-center h-100">Exit</span>
+                </div>
               </a>
             </li>
           </ul>
         </div>
       </div>
     </div>
-
   </div>
 </template>
+<style>
+    .popover:not(.modal-in){
+        z-index: -1 !important;
+    }
+</style>
 <script>
     import directus from '@/js/services/directus.js'
     import ably from '@/js/services/ably.js'
-    export default async (props, { $f7, $update }) => {
-      var hasUser = await directus.users.me.read({ fields: ['*.*.*.*']})
-        .then(() => {
-          console.log('Successfully connected to Directus CMS')
-          return true
+    export default async (props, { $, $f7, $f7router, $update, $on, $f7ready }) => {
+      let hasUser = await directus.users.me.read({ fields: ['*.*.*.*']})
+      .then(() => {
+        return true
+      })
+      .catch(async() => {
+        return false
+      })
+      $f7ready(async() => {
+        // checks every 10 minutes if they have their refresh token
+        var updateCheck = setInterval(async() =>{
+          await directus.users.me.read({ fields: ['*.*.*.*']})
+            .then(() => {
+              return true
+            })
+            .catch(async() => {
+              window.f7.views.main.router.navigate.navigate('/login/')
+              return await directus.auth.logout().then(() => false)
+            })
+        }, 10 * 60 * 1000)
+        $('#logout').click(() => {
+            $f7.dialog.confirm('Logout from the app?', 'RPS Royale - Logout', async() => {
+              await directus.auth.logout().then(() => {
+                console.log('Logged Out')
+              }).catch((e) => {
+                console.log(e)
+              })
+              window.f7.views.main.router.navigate({ path: '/login/' })
+            })
         })
-        .catch(() => false)
-      ably.connection.on('connected', function() {
-          console.log('Successfully connected to Ably WS Server')
+
+        ably.connection.on('connected', function() {
+            console.log('Successfully connected to Ably WS Server')
+        })
       })
     return $render;
   }

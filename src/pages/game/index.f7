@@ -1,32 +1,42 @@
 <template>
     <div class="page" data-name="game">
         <div class="page-content">
-            <div class="mt-5 display-flex flex-direction-column h-82 justify-content-space-between">
+            <div class="mt-5 display-flex flex-direction-column h-92 justify-content-space-between">
                 <div class="display-flex justify-content-center">
-                    <div class="title display-flex w-100 flex-direction-column mt-10">
+                    <div class="title display-flex w-100 flex-direction-column mt-5">
                         <div class="display-flex justify-content-center">Round ${round}</div>
+                        <${statusDisplay} score=${score} user=${user} opponent=${opponent}/>
                         <!-- <${StatusIndicator} /> -->
                     </div>
                 </div>
-                <div class="display-flex flex-direction-column h-50 justify-content-end">
-                    <div class="display-flex flex-direction-row justify-content-space-around">
-                        <a href="#" class="button card-object" id="rock">
-                            <div class="card-object-title">Rock</div>
-                        </a>
-                        <a href="#" class="button card-object" id="paper">
-                            <div class="card-object-title">Paper</div>
-                        </a>
-                        <a href="#" class="button card-object" id="scissor">
-                            <div class="card-object-title">Scissor</div>
-                        </a>
-                    </div>
-                    <div class="mt-10 display-flex flex-direction-row w-100 justify-content-center">
-                        <div class="display-flex flex-direction-column align-items-center w-88 justify-content-space-evenly">
-                            <button class="button button-fill button-round color-tertiary w-88 p-6 my-2" id="continue" disabled>Continue</button>
-                            <button class="button button-fill button-round color-secondary w-88 p-6 my-2" id="cancel" disabled>Cancel</button>
+                
+                    <div class="${currentTurn === user.id ? 'display-flex' : 'display-none'} flex-direction-column h-50 justify-content-end">
+                        <div class="display-flex flex-direction-row justify-content-space-around">
+                            <a href="#" class="button card-object" id="rock">
+                                <div class="card-object-title">Rock</div>
+                            </a>
+                            <a href="#" class="button card-object" id="paper">
+                                <div class="card-object-title">Paper</div>
+                            </a>
+                            <a href="#" class="button card-object" id="scissor">
+                                <div class="card-object-title">Scissor</div>
+                            </a>
+                        </div>
+                        <div class="mt-10 display-flex flex-direction-row w-100 justify-content-center">
+                            <div class="display-flex flex-direction-column align-items-center w-88 justify-content-space-evenly">
+                                <button class="button button-fill button-round color-tertiary w-88 p-6 my-2" id="continue" disabled>Continue</button>
+                                <button class="button button-fill button-round color-secondary w-88 p-6 my-2" id="cancel" disabled>Cancel</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="${currentTurn === user.id ? 'display-none' : 'display-flex'} flex-direction-column h-50 justify-content-start w-100">
+                        <div class="display-flex flex-direction-row justify-content-center w-100">
+                            <div class="preloader" style="width: 50px; height: 50px"></div>
+                        </div>
+                        <div class="display-flex flex-direction-row justify-content-center w-100 pt-10">
+                            Waiting for ${opponent.username}'s next move...
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -36,23 +46,146 @@
     import Game from '@/js/services/game.js'
     import directus from '@/js/services/directus.js'
     import ably from '@/js/services/ably.js'
+    import hexToRgba from 'hex-to-rgba'
+    import fontColorContrast from 'font-color-contrast'
+    import lodash from 'lodash'
     import { v4 as uuid } from 'uuid'
-    export default async(props, { $, $on, $update, $f7router }) => {
+    export default async(props, { $, $on, $f7, $update, $f7router }) => {
         var currentChoice
         var session_id = props?.id ?? uuid()
         var choices = ['rock', 'paper', 'scissor']
         var channel = ably.channels.get(session_id)
         var game = new Game()
         var user = await directus.users.me.read({ fields: ['*.*.*.*.*.*']})
-        var session = await directus.items('sessions').readOne(session_id)
+        var round = 1, stats = {}, score = {}, players = [], currentTurn, opponent
+        var session = await directus.items('sessions').readOne(session_id, { fields: ['*.*.*.*.*.*.*.*'] }).then((s) => {
+            stats = {
+                [s.player_one.id]: null,
+                [s.player_two.id]: null
+            }
+            score = {
+                [s.player_one.id]: 0,
+                [s.player_two.id]: 0
+            }
+            players = [s.player_one, s.player_two]
+            currentTurn = s.host.id
+            opponent = players.find((player) => player.id !== user.id)
+            return s
+        })
         .catch(() => {
             $f7router.navigate('/')
         })
-        var turn = 0
-        var round = 1
+        var statusDisplay =  (props, { $h }) => {
+            let retrieveScoreStyle = (p) => {
+                return `color: ${p.color};`
+            }
+            let retrieveBoardStyle = (p) => {
+                return `box-shadow: 0px 0px 0.125px 0.5px ${hexToRgba(p.color, 0.5)}; background-color: ${hexToRgba(p.color, 0.625)};`
+            }
+            let retrieveVersusStyle = (p) => {
+                let contrast = fontColorContrast(p.color)
+                let style = {
+                    'background-color': `${p.color}`,
+                    color: `${contrast}`,
+                }
+                let res = Object.entries(style).map(([key, val]) => `${key}: ${val}`).join('; ') + ';'
+                return res
+            }
+            return () => $h`
+            <div class="display-flex w-100 flex-direction-row justify-content-center mt-3">
+                <div class="display-flex w-75 flex-direction-column align-items-center" style="border-top: 1px solid var(--f7-theme-color);">
+                    <div class="display-flex w-100 flex-direction-row justify-content-center fsize-4 mb-4" style="border-bottom: 1px solid var(--f7-theme-color);">
+                        Score
+                    </div>
+                    <div class="display-flex w-100 flex-direction-row justify-content-space-evenly gaps-2">
+                        <div class="display-flex mx-2 flex-direction-column justify-content-center w-100" style="${retrieveBoardStyle(props.user)}">
+                            <span class="fsize-4 fw-semibold display-flex flex-direction-row justify-content-center" style="${retrieveVersusStyle(props.user)}">${props.user.username}</span>
+                            <span class="py-2 fsize-5 fw-normal display-flex w-100 justify-content-center" style="${retrieveScoreStyle(props.user)}">${props.score[props.user.id] ?? 0}</span>
+                        </div>
+                        <div class="display-flex mx-2 flex-direction-column justify-content-center w-100"  style="${retrieveBoardStyle(props.opponent)}">
+                            <span class="fsize-4 fw-semibold display-flex flex-direction-row justify-content-center" style="${retrieveVersusStyle(props.opponent)}">${props.opponent.username}</span>
+                            <span class="py-2 fsize-5 fw-normal display-flex w-100 justify-content-center" style="${retrieveScoreStyle(props.opponent)}">${props.score[props.opponent.id] ?? 0}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `
+        }
+
         $on('pageInit', () => {
-            channel.subscribe('game', (message) => {
-                console.log(message)
+            $f7.dialog.close()
+            channel.subscribe('playerLeft', (message) => {
+                let inactiveUser = JSON.parse(message.data)
+                $f7.dialog.progress(`Your opponent ${inactiveUser.username} has left. Redirecting you to the home page...`)
+                channel.detach()
+                setTimeout(() => {
+                    $f7.dialog.close()
+                    $f7router.navigate({ path: '/' })
+                }, 3000)
+            })
+            channel.subscribe('game', async(message) => {
+                let res = JSON.parse(message.data)
+                stats[res.id] = res.choice
+                if (Object.values(stats).every((v) => v !== null) && Object.keys(stats).every((k) => k === user.id || k === opponent.id)) {
+                    user = {
+                        ...user,
+                        choice: stats[user.id]
+                    }
+                    opponent = {
+                        ...opponent,
+                        choice: stats[opponent.id]
+                    }
+                    let result = game.playRound(user, opponent)
+                    if (result.state === 'winner') {
+                        await directus.items('sessions').updateOne(session_id, {
+                            winner: result.winner,
+                        }).then(() => {
+                            $f7router.navigate({
+                                name: 'result',
+                                params: {
+                                    id: session_id,
+                                },
+                            })
+                        })
+                    } else {
+                        let isWinner = user.id === result.winner
+                        switch(true) {
+                            case result.winner === null:
+                                $f7.dialog.alert(`You and your opponent both chose ${lodash.startCase(user.choice)}`, `It's a draw!`, () => {
+                                    setTimeout(() => {
+                                        $f7.dialog.close()
+                                    }, 5000)
+                                })
+                                break
+                            case result.winner === user.id:
+                                $f7.dialog.alert(`${lodash.startCase(user.choice)} beats ${lodash.startCase(opponent.choice)}`, `You won!`, () => {
+                                    setTimeout(() => {
+                                        $f7.dialog.close()
+                                    }, 5000)
+                                })
+                                break
+                            default:
+                                $f7.dialog.alert(`${lodash.startCase(opponent.choice)} beats ${lodash.startCase(user.choice)}`, `You lost...`, () => {
+                                    setTimeout(() => {
+                                        $f7.dialog.close()
+                                    }, 5000)
+                                })
+                                break
+                        }
+                        currentTurn = players.find((player) => player.id !== currentTurn)?.id
+                    }
+                    delete user.choice
+                    delete opponent.choice
+                    round = result.round
+                    score = result.status
+                    stats = {
+                        [user.id]: null,
+                        [opponent.id]: null,
+                    }
+                } else {
+                    currentTurn = players.find((player) => player.id !== currentTurn)?.id
+                }
+                $update()
             })
 
             let reset = (id) => {
@@ -97,40 +230,37 @@
             })
             
             $('#continue').on('click', () => {
-                let getRandomInt = () => Math.floor(Math.random() * choices.length)
-                let index = getRandomInt()
-                let tmp = {
-                    id: '1234',
-                    choice: choices[index]
-                }
-                let usr = {
-                    ...user,
-                    choice: currentChoice
-                }
-                let lineup = turn === 0 ? [usr, tmp] : [tmp, usr] 
-                turn = (turn + 1) % 2
-                let result = game.playRound(...lineup)
-                if (result.state === 'winner') {
-                    $f7router.navigate({
-                        name: 'result',
-                        params: {
-                            id: session_id
-                        }
-                    })
-                }
-                round = result.round
-                reset('#' + currentChoice)
-                slide('#' + currentChoice)
-                currentChoice = null
-                $('#cancel').attr('disabled', true)
-                $('#continue').attr('disabled', true)
-                $update()
+                let req = JSON.stringify({
+                    id: user.id,
+                    choice: currentChoice,
+                })
+                channel.publish('game', req, (err) => {
+                    if (err) console.log(err)
+                    else {
+                        reset('#' + currentChoice)
+                        slide('#' + currentChoice)
+                        currentChoice = null
+                        $('#cancel').attr('disabled', true)
+                        $('#continue').attr('disabled', true)
+                        $update()
+                    }
+                })
             })
-            $on('pageBeforeOut', () => {
-                channel.detach()
+            $on('pageBeforeOut', async() => {
                 channel.on('detached', (state) => {
                     console.log('Detached from the channel:', id);
                 })
+                if (session.winner === null) {
+                    await directus.items('sessions').deleteOne(session.id)
+                        .then(() => {
+                            console.log('Deleted current session')
+                        })
+                        .catch(() => {
+                            console.log('Session is already deleted')
+                        })
+                    let leftUser = JSON.stringify(user)
+                    channel.publish('playerLeft', leftUser)
+                }
             })
         })
         return $render

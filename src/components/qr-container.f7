@@ -1,20 +1,31 @@
 <template>
-    <div id="qr-container"></div>
+    <div id="qr-container">
+        <div class="preloader"></div>
+    </div>
 </template>
 <style>
     #qr-container {
         width: 100%;
         display: flex;
-        justify-content: center;
+        justify-content: start;
+        flex-direction: column;
+        align-items: center;
+    }
+    #qr-container.canvas {
+        min-height: 297.5px; 
     }
 </style>
 <script>
 import QRCode from "qrcode"
 import directus from '@/js/services/directus.js'
 import { v4 as uuid } from 'uuid'
-export default async(props, { $, $onMounted, $el }) => {
+export default async(props, { $, $onMounted, $el, $f7router }) => {
     var id = await directus.users.me.read({ fields: ['id'] }).then((user) => user.id)
+        .catch(() => {
+            $f7router.navigate('/login/')
+        })
     var sid = props?.id ?? uuid()
+    var isLoaded = false
     $onMounted(() => {
         let payload = {
             session_id: sid,
@@ -22,7 +33,10 @@ export default async(props, { $, $onMounted, $el }) => {
         }
         QRCode.toCanvas(JSON.stringify(payload), { version: 15, errorCorrectionLevel: 'H' }, function (err, canvas) {
             if (err) throw err
+            isLoaded = true
+            $('#qr_loader').remove()
             var container = $el.value
+            container.classList = "lazy lazy-fade-in"
             container.append(canvas)
         })
     })
