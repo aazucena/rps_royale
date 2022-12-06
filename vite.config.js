@@ -3,6 +3,7 @@ import path from 'path';
 import framework7 from 'rollup-plugin-framework7';
 
 import { createHtmlPlugin } from 'vite-plugin-html';
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split'
 
 process.env.TARGET = process.env.TARGET || 'web';
 const isCordova = process.env.TARGET === 'cordova';
@@ -25,6 +26,7 @@ export default {
         },
       },
     }),
+    chunkSplitPlugin(),
   ],
   root: SRC_DIR,
   base: '',
