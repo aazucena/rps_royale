@@ -106,35 +106,43 @@ Love Framework7? Support project by donating or pledging on:
 - OpenCollective: https://opencollective.com/framework7
 
 
+## Instructions
+```bash
+npm install # 1. Install dependencies
+npm run cordova-add:android # 2. Add android to your cordova platform
+npm run cordova:android #3. Run the app on cordova
+```
+
+
 ## TODO
 
 ### Need
-- [Directus Cloud API](https://directus.io/cloud/)
-  - Matchmaking Session
-  - Player
-  - Leaderboard
-- QR Scanner
-- RPS Game System
-  - Hand
+- [Directus Cloud API](https://directus.io/cloud/) :heavy_check_mark:
+  - Matchmaking Session :heavy_check_mark:
+  - Player :heavy_check_mark:
+  - Leaderboard :x:
+- QR Scanner :heavy_check_mark:
+- RPS Game System :heavy_check_mark:
+  - Hand :heavy_check_mark:
     - Rock
     - Paper
     - Scissor
-  - Leaderboard
+  - Leaderboard :x:
     - Win-Loss Ratio
     - Top Players
 - Pages
-  - Game Session
-  - Matchmaking
-  - Leaderboard
-  - QR Display
-  - QR Scanner
-  - Profile
+  - Game Session :heavy_check_mark:
+  - Matchmaking :heavy_check_mark:
+  - Leaderboard :x:
+  - QR Display :heavy_check_mark:
+  - QR Scanner :heavy_check_mark:
+  - Profile :x:
 
 ### Nice to have
 - Geolocation Feature
-  - [Mapbox](https://www.mapbox.com/)
-  - Display yours' and other players' location if you are in matchmaking session
-  - If you are in proximity of the other player in session, it opens either QR scanner or QR display
+  - [Mapbox](https://www.mapbox.com/) :x:
+  - Display yours' and other players' location if you are in matchmaking session :x:
+  - If you are in proximity of the other player in session, it opens either QR scanner or QR display :x:
 
-- Accelerometer
+- Accelerometer :x:
   - When players are done choosing their move, they must shake their device once to display the result of the game round

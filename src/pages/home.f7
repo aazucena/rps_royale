@@ -14,12 +14,12 @@
             <div class="w-100 fsize-6 fw-bold ps-4">Help - Game</div>
           </div>
           <div class="display-flex w-100 flex-direction-row justify-content-center mb-2">
-            <div class="w-75 fsize-3 fw-medium">
+            <div class="w-75 fsize-4 fw-medium">
               <div class="fsize-5">About</div>
               <p class="ps-3">
                 Rock Paper Scissors is a zero sum game that is usually played by two people using their hands and no tools.
                 The idea is to make shapes with an outstretched hand where each shape will have a certain degree of power and will lead to an outcome.
-                <sup class="fsize-2"><a class="link external" href="https://wrpsa.com/the-official-rules-of-rock-paper-scissors/">Source</a></sup>
+                <sup class="fsize-3"><a class="link external" href="https://wrpsa.com/the-official-rules-of-rock-paper-scissors/">Source</a></sup>
               </p>
               <div class="fsize-5">Rules</div>
               <ul>
