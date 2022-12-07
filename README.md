@@ -1,5 +1,10 @@
 # RPS Royale
 
+## About
+
+RPS Royale is a gaming app that incorporates a very well-known game of **Rock, Paper, Scissor** with a twist to it. That twist is that you can only play with other players if you register your account and scan the QR Code to play the game with other players in a Peer-to-peer fashion. Play and defeat your opponent in a game of rock, paper, & scissors right in front of their faces in realtime.
+
+
 ## Framework7 CLI Options
 
 Framework7 app created with following options:

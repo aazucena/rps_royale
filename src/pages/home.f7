@@ -3,8 +3,8 @@
     <${Navbar} />
     <div class="page-content hide-navbar-on-scroll">
       <${MainMenu}>
-        <${MainMenuItem} href="/qr/scan/" title="Play"/>
-        <${MainMenuItem} href="/credits/" title="Credits"/>
+        <${MainMenuItem} href="/qr/scan/" icon="play_circle" title="Play"/>
+        <${MainMenuItem} href="/credits/" icon="article" title="Credits"/>
       </${MainMenu}>
     </div>
     <div class="popup popup-help">

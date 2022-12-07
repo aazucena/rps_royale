@@ -3,7 +3,7 @@
         <div class="main-menu-item-img">
             ${!!imgPath === true ? $h`
                 <img src=${imgPath} />
-            `: $h`<div class="icon material-icons">play_circle</div>`}
+            `: $h`<div class="icon material-icons">${icon}</div>`}
         </div>
         <div class="main-menu-item-title">${title}</div>
     </a>
@@ -13,6 +13,7 @@
         var imgPath = props.imgSrc
         var title = props.title ?? 'Play'
         var menuPath = props.href ?? '#'
+        var icon = props.icon ?? 'play_circle'
 
         return $render
     }
