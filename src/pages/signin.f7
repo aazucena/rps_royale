@@ -54,7 +54,7 @@
 <script>
     import directus from '@/js/services/directus.js'
     import { randomColor } from '@/js/services/utilities.js'
-    export default async (props, { $, $on }) => {
+    export default async (props, { $, $f7, $on }) => {
         var roles = await directus.roles.readByQuery().then(({ data: role_data }) => role_data.at(0))
         let data = {}
         $on('pageInit', () => {
@@ -99,9 +99,10 @@
                         $('#create_button').addClass('vibrate-3')
                         break
                     default:
-                        delete data.repeat_password
                         directus.users.createOne({
-                            ...data, 
+                            username: data.username, 
+                            email: data.email, 
+                            password: data.password, 
                             color: randomColor(),
                             role: roles.id
                         }).then(() => {
